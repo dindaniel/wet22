@@ -11,7 +11,7 @@
 
 class Clan{
     int clanId;
-    AVLtree<ClanKey, Player*> playerTree; //all of the players in this clan (ranks)
+    AVLtree<ClanKey, Player*>* playerTree; //all of the players in this clan (ranks)
     bool is_conquered;
     int clanSize;
 

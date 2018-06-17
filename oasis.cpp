@@ -6,16 +6,15 @@
 Oasis::Oasis(): allClans(HashTable()), allPlayers(),
     freeClans(){}
 
-Oasis::Oasis(int numOfClans, int *clanIDs): allClans(HashTable(numOfClans)),
-    allPlayers(AVLtree<int, Player*>()){
-
+Oasis::Oasis(int numOfClans, int *clanIDs): allClans(HashTable(numOfClans)){
+    this->allPlayers = new AVLtree<int , Player*>();
     Clan** clanArr = new Clan*[numOfClans];
     for(int i = 0; i<numOfClans; i++){
         int id = clanIDs[i];
         clanArr[i] = new Clan(id);
     }
     this->allClans.init(numOfClans, clanArr);
-    this->freeClans = minHeap<Clan*>(clanArr, numOfClans);
+    this->freeClans = minHeap<int>(clanIDs, numOfClans);
     delete[] clanArr;
 }
 
@@ -31,16 +30,12 @@ int Oasis::getNumOfClans() {
     return this->allClans.getNumofElements();
 }
 
-minHeap<Clan*>* Oasis::getFreeClans() {
-    return &this->freeClans;
-}
-
 AVLtree<int, Player*>* Oasis::getPlayers() {
-    return &this->allPlayers;
+    return this->allPlayers;
 }
 
 int Oasis::getNumOfPlayers() {
-    return this->allPlayers.getSize();
+    return this->allPlayers->getSize();
 }
 
 StatusType Oasis::addClan(int clanID) {
@@ -50,22 +45,21 @@ StatusType Oasis::addClan(int clanID) {
     if(this->allClans.find(clanID) != NULL){
         return FAILURE;
     }
-    Clan* cl;
     try{
-        cl = new Clan(clanID);
+        this->allClans.addClan(clanID);
+        this->freeClans.insert(clanID);
+        return SUCCESS;
     }catch (std::bad_alloc&){
         return ALLOCATION_ERROR;
     }
-    this->allClans.addClan(clanID);
-    this->freeClans.insert(&cl);
-    return SUCCESS;
+
 }
 
 StatusType Oasis::addPlayer(int playerID, int score, int clan){
     if(playerID<0 || score <0 || clan<0){
         return INVALID_INPUT;
     }
-    if(this->allPlayers.contains(playerID) || this->allClans.find(clan) != NULL){
+    if(this->allPlayers->contains(playerID) || this->allClans.find(clan) != NULL){
         return FAILURE;
     }
     Player *pl;
@@ -74,7 +68,7 @@ StatusType Oasis::addPlayer(int playerID, int score, int clan){
     } catch(std::bad_alloc&){
         return ALLOCATION_ERROR;
     }
-    this->allPlayers.insert(score, pl); //rank tree for simplicity??
+    this->allPlayers->insert(score, pl); //rank tree for simplicity??
     Clan *cl = this->allClans.find(clan);
     cl->addPlayerToClan(pl);
     return SUCCESS;
@@ -103,20 +97,20 @@ StatusType Oasis::clanFight(int clan1, int clan2, int k1, int k2) {
     if(fightScore1 == fightScore2){
         if(clan1 < clan2){
             cl2->surrender();
-            this->freeClans.remove(&cl2);
+            this->freeClans.remove(cl2->getClanId());
             return SUCCESS;
         }
         cl1->surrender();
-        this->freeClans.remove(&cl1);
+        this->freeClans.remove(cl1->getClanId());
         return SUCCESS;
     }
     if(fightScore1<fightScore2){
         cl1->surrender();
-        this->freeClans.remove(&cl1);
+        this->freeClans.remove(cl1->getClanId());
         return SUCCESS;
     }
     cl2->surrender();
-    this->freeClans.remove(&cl2);
+    this->freeClans.remove(cl2->getClanId());
     return SUCCESS;
 }
 
@@ -127,6 +121,16 @@ StatusType Oasis::getMinClan(int *clan) {
     if(this->freeClans.getNumofElements() == 0){
         return FAILURE; //implicit
     }
-    *clan = this->freeClans.getMin()->getClanId();
+    *clan = this->freeClans.getMin();
     return SUCCESS;
+}
+
+Oasis::~Oasis() {
+    int arr_size_p =allPlayers->getSize();
+    Player** temp_p = new Player*[arr_size_p];
+    allPlayers->reverse_inorder(temp_p, allPlayers->getRoot());
+    for(int i=0; i<arr_size_p ; i++){
+        delete temp_p[i];
+    }
+    delete[] temp_p;
 }

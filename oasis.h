@@ -11,8 +11,8 @@
 
 class Oasis{
     HashTable allClans;
-    minHeap<Clan*> freeClans;
-    AVLtree<int, Player*> allPlayers;
+    minHeap<int> freeClans;
+    AVLtree<int, Player*>* allPlayers;
 
 public:
     Oasis();
@@ -20,7 +20,6 @@ public:
     HashTable* getClans();
     int getHashTableSize();
     int getNumOfClans();
-    minHeap<Clan*>* getFreeClans();
     AVLtree<int, Player*>* getPlayers();
     int getNumOfPlayers();
 

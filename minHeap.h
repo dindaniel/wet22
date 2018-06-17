@@ -95,18 +95,18 @@ public:
     minHeap(int size):maxSize(size), numofElements(0){
         this->heap = new T[size];
     }
-    void insert(T* element){
-        heap[this->numofElements] = *element;
+    void insert(T element){
+        heap[this->numofElements] = element;
         this->siftUp(this->numofElements);
         this->numofElements++;
         if(this->numofElements == this->maxSize){
             incSizeHeap(this->maxSize*2);
         }
     }
-    void remove(T* el_to_remove) {
+    void remove(T el_to_remove) {
         int index_to_remove = 0;
         for(int i = 0; i< this->numofElements; i++){
-            if(heap[i] == *el_to_remove){
+            if(heap[i] == el_to_remove){
                 index_to_remove = i;
             }
         }
@@ -124,7 +124,7 @@ public:
     }
     ~minHeap(){
         delete[] heap;
-    };
+    }
     //void decKey(int place, T key_value);
 
 };

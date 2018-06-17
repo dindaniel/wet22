@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.9)
-project(wet2_3aaa889aced006a6290317e78df1c117d5d37472)
+cmake_minimum_required(VERSION 3.6)
+project(HW3_3)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(wet2_3aaa889aced006a6290317e78df1c117d5d37472
+set(SOURCE_FILES main.cpp)
+add_executable(HW3_3
         avltree.h
         clan.cpp
         clan.h
@@ -13,9 +14,9 @@ add_executable(wet2_3aaa889aced006a6290317e78df1c117d5d37472
         library2.cpp
         library2.h
         list.h
-        main2.cpp
         minHeap.h
         oasis.cpp
         oasis.h
         player.cpp
-        player.h)
+        player.h
+        main.cpp)

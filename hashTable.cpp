@@ -29,8 +29,8 @@ int HashTable::getNumofElements() {
 }
 
 void HashTable::addClan(int clanID) {
-    Clan* tempClan =new Clan(clanID);
-    addClan(tempClan);
+    Clan tempClan = Clan(clanID);
+    addClan(&tempClan);
 }
 
 void HashTable::addClan(Clan* clan) {
@@ -59,18 +59,14 @@ void HashTable::rehash() {
 
 Clan* HashTable::find(int clanID) {
     int insertionPlace = clanID % this->tableSize;
-    for(List<Clan*>::Iterator iter = this->table[insertionPlace].begin();
-        iter != this->table[insertionPlace].end(); iter++){
-        if((*iter)->getClanId() == clanID){
+    for (List<Clan *>::Iterator iter = this->table[insertionPlace].begin();
+         iter != this->table[insertionPlace].end(); iter++) {
+        if ((*iter)->getClanId() == clanID) {
             return (*iter);
         }
     }
-    return 0;
+    return NULL;
 }
-
-//RankedSplay* getFromTable(int groupID);
-//void insertToTable(int groupID, RankedSplay* value);
-
 
 HashTable::~HashTable(){
     delete[] table;

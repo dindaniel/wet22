@@ -4,7 +4,7 @@
 #include "oasis.h"
 
 void* init(int n, int* clanIDs){
-    if(n<2)
+    if(n<2 || clanIDs == NULL)
         return NULL;
     for(int i = 0; i < n; i++){
         if(clanIDs[i]<0) return NULL;
@@ -44,5 +44,7 @@ void quit(void** DS){
     if(DS == NULL || *DS == NULL){
         return;
     }
-    delete(*DS);
+    Oasis* ptr = (Oasis*)*DS;
+    *DS = nullptr;
+    delete(ptr);
 }

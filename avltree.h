@@ -12,12 +12,10 @@
 // Created by din on 14/05/2018.
 //
 
-//TODO: add ranks!
-//TODO: each node needs to contain the sum of keys in it's subtree
-
 #include <assert.h>
 #include <iostream>
 
+#define nullptr 0
 
 typedef enum {
     AVL_SUCCESS, AVL_ALREADY_EXIST, AVL_NOT_EXIST
